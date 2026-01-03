@@ -225,6 +225,32 @@
             color: var(--teal);
         }
 
+        /* Profit section */
+        .profit-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .profit-label {
+            font-size: 0.85rem;
+            color: #2E7D32;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .profit-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1B5E20;
+        }
+
+        .profit-value.bounce {
+            animation: bounce 0.4s ease;
+        }
+
         /* Clear button */
         .clear-btn {
             display: block;
@@ -354,6 +380,11 @@
                 </div>
             </div>
 
+            <div class="profit-section">
+                <div class="profit-label">Your profit (30% markup)</div>
+                <div class="profit-value" id="profit">₱ 0.00</div>
+            </div>
+
             <button class="clear-btn" id="clear-btn">Clear</button>
         </div>
 
@@ -368,8 +399,10 @@
         const markupPriceEl = document.getElementById('markup-price');
         const phpPriceEl = document.getElementById('php-price');
         const resultEl = document.getElementById('result');
+        const profitEl = document.getElementById('profit');
         const clearBtn = document.getElementById('clear-btn');
 
+        const MARKUP_PERCENT = 0.30;
         const MARKUP_RATE = 1.30;
         const CONVERSION_RATE = 1.85;
 
@@ -387,17 +420,24 @@
             const withMarkup = thbPrice * MARKUP_RATE;
             const phpPrice = withMarkup * CONVERSION_RATE;
 
+            // Profit = 30% of original price, converted to PHP
+            const profitThb = thbPrice * MARKUP_PERCENT;
+            const profitPhp = profitThb * CONVERSION_RATE;
+
             originalPriceEl.textContent = formatNumber(thbPrice, '฿');
             markupPriceEl.textContent = formatNumber(withMarkup, '฿');
             phpPriceEl.textContent = phpPrice.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
+            profitEl.textContent = formatNumber(profitPhp, '₱');
 
             // Bounce animation
             resultEl.classList.remove('bounce');
-            void resultEl.offsetWidth; // Trigger reflow
+            profitEl.classList.remove('bounce');
+            void resultEl.offsetWidth;
             resultEl.classList.add('bounce');
+            profitEl.classList.add('bounce');
         }
 
         function clearAll() {
