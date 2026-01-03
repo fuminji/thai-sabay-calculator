@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thai Sabay Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFF8F0;
+            --bg-peach: #FFE8D6;
+            --coral: #FF6B5B;
+            --coral-light: #FF8A7A;
+            --teal: #4ECDC4;
+            --teal-light: #7EDDD6;
+            --text-dark: #2D3436;
+            --text-medium: #636E72;
+            --text-light: #B2BEC3;
+            --white: #FFFFFF;
+            --shadow: rgba(45, 52, 54, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-peach) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .logo-thai {
+            color: var(--coral);
+        }
+
+        .logo-sabay {
+            color: var(--teal);
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        /* Main card */
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 10px 40px var(--shadow),
+                        0 2px 10px var(--shadow);
+        }
+
+        /* Input section */
+        .input-section {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .flag {
+            font-size: 1.2rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-cream);
+            border-radius: 16px;
+            padding: 4px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--coral-light);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(255, 107, 91, 0.15);
+        }
+
+        .currency-symbol {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--coral);
+            padding: 12px 8px 12px 16px;
+        }
+
+        .price-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            padding: 12px 16px 12px 4px;
+            outline: none;
+            min-width: 0;
+        }
+
+        .price-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .price-input::-webkit-outer-spin-button,
+        .price-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .price-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Breakdown section */
+        .breakdown {
+            background: linear-gradient(135deg, #F8F9FA 0%, #F1F3F4 100%);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .breakdown-row:not(:last-child) {
+            border-bottom: 1px dashed var(--text-light);
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        .breakdown-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .breakdown-row.markup .breakdown-label {
+            color: var(--coral);
+        }
+
+        .breakdown-row.markup .breakdown-value {
+            color: var(--coral);
+        }
+
+        /* Result section */
+        .result-section {
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .result-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: var(--teal);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+            transition: transform 0.15s ease;
+        }
+
+        .result-value.bounce {
+            animation: bounce 0.4s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .result-currency {
+            color: var(--teal);
+        }
+
+        /* Clear button */
+        .clear-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: var(--bg-cream);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-medium);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clear-btn:hover {
+            background: var(--coral);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 91, 0.3);
+        }
+
+        .clear-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        .footer span {
+            color: var(--coral);
+        }
+
+        /* Animation on load */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .calculator {
+            animation: slideUp 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+
+            .price-input {
+                font-size: 1.5rem;
+            }
+
+            .result-value {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <header class="header">
+            <h1 class="logo">
+                <span class="logo-thai">Thai</span> <span class="logo-sabay">Sabay</span>
+            </h1>
+            <p class="tagline">Price Calculator</p>
+        </header>
+
+        <div class="card">
+            <div class="input-section">
+                <label class="input-label" for="thb-price">
+                    <span class="flag">🇹🇭</span>
+                    Enter price in Thai Baht
+                </label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">฿</span>
+                    <input
+                        type="number"
+                        id="thb-price"
+                        class="price-input"
+                        placeholder="0"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <div class="breakdown">
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Original price</span>
+                    <span class="breakdown-value" id="original-price">฿ 0.00</span>
+                </div>
+
+                <div class="breakdown-row markup">
+                    <span class="breakdown-label">+ 30% markup</span>
+                    <span class="breakdown-value" id="markup-price">฿ 0.00</span>
+                </div>
+
+                <div class="breakdown-row">
+                    <span class="breakdown-label">× 1.85 conversion</span>
+                    <span class="breakdown-value" id="conversion-note">→ PHP</span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-label">
+                    <span class="flag">🇵🇭</span>
+                    Final price in Pesos
+                </div>
+                <div class="result-value" id="result">
+                    <span class="result-currency">₱</span><span id="php-price">0.00</span>
+                </div>
+            </div>
+
+            <button class="clear-btn" id="clear-btn">Clear</button>
+        </div>
+
+        <footer class="footer">
+            🇹🇭 THB → 🇵🇭 PHP <span>with 30% markup</span>
+        </footer>
+    </div>
+
+    <script>
+        const input = document.getElementById('thb-price');
+        const originalPriceEl = document.getElementById('original-price');
+        const markupPriceEl = document.getElementById('markup-price');
+        const phpPriceEl = document.getElementById('php-price');
+        const resultEl = document.getElementById('result');
+        const clearBtn = document.getElementById('clear-btn');
+
+        const MARKUP_RATE = 1.30;
+        const CONVERSION_RATE = 1.85;
+
+        function formatNumber(num, currency = '') {
+            if (num === 0) return currency + ' 0.00';
+            return currency + ' ' + num.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function calculate() {
+            const thbPrice = parseFloat(input.value) || 0;
+
+            const withMarkup = thbPrice * MARKUP_RATE;
+            const phpPrice = withMarkup * CONVERSION_RATE;
+
+            originalPriceEl.textContent = formatNumber(thbPrice, '฿');
+            markupPriceEl.textContent = formatNumber(withMarkup, '฿');
+            phpPriceEl.textContent = phpPrice.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            // Bounce animation
+            resultEl.classList.remove('bounce');
+            void resultEl.offsetWidth; // Trigger reflow
+            resultEl.classList.add('bounce');
+        }
+
+        function clearAll() {
+            input.value = '';
+            calculate();
+            input.focus();
+        }
+
+        input.addEventListener('input', calculate);
+        clearBtn.addEventListener('click', clearAll);
+
+        input.focus();
+    </script>
+</body>
+</html>
