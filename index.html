@@ -360,7 +360,7 @@
                 </div>
 
                 <div class="breakdown-row markup">
-                    <span class="breakdown-label">+ 30% markup</span>
+                    <span class="breakdown-label">+ 50% markup</span>
                     <span class="breakdown-value" id="markup-price">฿ 0.00</span>
                 </div>
 
@@ -381,7 +381,7 @@
             </div>
 
             <div class="profit-section">
-                <div class="profit-label">Your profit (30% markup)</div>
+                <div class="profit-label">Your profit (50% markup)</div>
                 <div class="profit-value" id="profit">₱ 0.00</div>
             </div>
 
@@ -389,7 +389,7 @@
         </div>
 
         <footer class="footer">
-            🇹🇭 THB → 🇵🇭 PHP <span>with 30% markup</span>
+            🇹🇭 THB → 🇵🇭 PHP <span>with 50% markup</span>
         </footer>
     </div>
 
@@ -402,8 +402,8 @@
         const profitEl = document.getElementById('profit');
         const clearBtn = document.getElementById('clear-btn');
 
-        const MARKUP_PERCENT = 0.30;
-        const MARKUP_RATE = 1.30;
+        const MARKUP_PERCENT = 0.50;
+        const MARKUP_RATE = 1.50;
         const CONVERSION_RATE = 1.85;
 
         function formatNumber(num, currency = '') {
@@ -420,7 +420,7 @@
             const withMarkup = thbPrice * MARKUP_RATE;
             const phpPrice = withMarkup * CONVERSION_RATE;
 
-            // Profit = 30% of original price, converted to PHP
+            // Profit = 50% of original price, converted to PHP
             const profitThb = thbPrice * MARKUP_PERCENT;
             const profitPhp = profitThb * CONVERSION_RATE;
 
