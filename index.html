@@ -251,6 +251,68 @@
             animation: bounce 0.4s ease;
         }
 
+        /* Markup selector */
+        .markup-selector {
+            margin-bottom: 24px;
+        }
+
+        .markup-selector-label {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .markup-options {
+            display: flex;
+            gap: 12px;
+        }
+
+        .markup-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .markup-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .markup-option label {
+            display: block;
+            padding: 14px 16px;
+            background: var(--bg-cream);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .markup-option label:hover {
+            background: var(--bg-peach);
+        }
+
+        .markup-option input:checked + label {
+            background: var(--coral);
+            color: var(--white);
+            border-color: var(--coral);
+            box-shadow: 0 4px 12px rgba(255, 107, 91, 0.3);
+        }
+
+        .markup-percent {
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .markup-desc {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
         /* Clear button */
         .clear-btn {
             display: block;
@@ -353,6 +415,26 @@
                 </div>
             </div>
 
+            <div class="markup-selector">
+                <div class="markup-selector-label">Select markup percentage</div>
+                <div class="markup-options">
+                    <div class="markup-option">
+                        <input type="radio" name="markup" id="markup-30" value="30">
+                        <label for="markup-30">
+                            <span class="markup-percent">30%</span>
+                            <span class="markup-desc">Standard</span>
+                        </label>
+                    </div>
+                    <div class="markup-option">
+                        <input type="radio" name="markup" id="markup-50" value="50" checked>
+                        <label for="markup-50">
+                            <span class="markup-percent">50%</span>
+                            <span class="markup-desc">Premium</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="breakdown">
                 <div class="breakdown-row">
                     <span class="breakdown-label">Original price</span>
@@ -389,7 +471,7 @@
         </div>
 
         <footer class="footer">
-            🇹🇭 THB → 🇵🇭 PHP <span>with 50% markup</span>
+            🇹🇭 THB → 🇵🇭 PHP <span>with markup</span>
         </footer>
     </div>
 
@@ -397,14 +479,20 @@
         const input = document.getElementById('thb-price');
         const originalPriceEl = document.getElementById('original-price');
         const markupPriceEl = document.getElementById('markup-price');
+        const markupLabelEl = document.querySelector('.breakdown-row.markup .breakdown-label');
+        const profitLabelEl = document.querySelector('.profit-label');
         const phpPriceEl = document.getElementById('php-price');
         const resultEl = document.getElementById('result');
         const profitEl = document.getElementById('profit');
         const clearBtn = document.getElementById('clear-btn');
+        const markupRadios = document.querySelectorAll('input[name="markup"]');
 
-        const MARKUP_PERCENT = 0.50;
-        const MARKUP_RATE = 1.50;
         const CONVERSION_RATE = 1.85;
+
+        function getMarkupPercent() {
+            const selected = document.querySelector('input[name="markup"]:checked');
+            return parseInt(selected.value) / 100;
+        }
 
         function formatNumber(num, currency = '') {
             if (num === 0) return currency + ' 0.00';
@@ -416,13 +504,20 @@
 
         function calculate() {
             const thbPrice = parseFloat(input.value) || 0;
+            const markupPercent = getMarkupPercent();
+            const markupRate = 1 + markupPercent;
 
-            const withMarkup = thbPrice * MARKUP_RATE;
+            const withMarkup = thbPrice * markupRate;
             const phpPrice = withMarkup * CONVERSION_RATE;
 
-            // Profit = 50% of original price, converted to PHP
-            const profitThb = thbPrice * MARKUP_PERCENT;
+            // Profit = markup % of original price, converted to PHP
+            const profitThb = thbPrice * markupPercent;
             const profitPhp = profitThb * CONVERSION_RATE;
+
+            // Update labels to show current markup
+            const percentDisplay = Math.round(markupPercent * 100);
+            markupLabelEl.textContent = `+ ${percentDisplay}% markup`;
+            profitLabelEl.textContent = `Your profit (${percentDisplay}% markup)`;
 
             originalPriceEl.textContent = formatNumber(thbPrice, '฿');
             markupPriceEl.textContent = formatNumber(withMarkup, '฿');
@@ -448,6 +543,7 @@
 
         input.addEventListener('input', calculate);
         clearBtn.addEventListener('click', clearAll);
+        markupRadios.forEach(radio => radio.addEventListener('change', calculate));
 
         input.focus();
     </script>
